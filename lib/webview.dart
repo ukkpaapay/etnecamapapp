@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -30,91 +32,180 @@ class _WebViewScreenState extends State<WebViewScreen> {
   int kmlIndex = 0;
   String token = "AIzaSyDIMEOPBeQ-rHzg5kWLRhWyBPlpjrDSfz4";
   String baseurl = "http://localhost:3000";
-  final script =
-      "document.getElementById('value').innerText=\"{message.message}\"";
 
   @override
   Widget build(BuildContext context) {
-    print(kmlIndex);
     return Scaffold(
-        body: SafeArea(
-      child: Stack(
+      body: Stack(
         children: [
           WebView(
-            initialUrl: '$baseurl/$token/$kmlIndex/',
+            initialUrl: '$baseurl/$kmlIndex/',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               controller = webViewController;
-              webViewController.runJavascript('alert("I am an alert box!");');
             },
             javascriptChannels: {
               JavascriptChannel(
                   name: 'title',
-                  onMessageReceived: (message) => showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Location'),
-                          content: Text("${message.message}"),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
+                  onMessageReceived: (message) => showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            content: Builder(
+                              builder: (context) {
+                                return Container(
+                                  height: 350,
+                                  width: 300,
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "${message.message}",
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.red[900]),
+                                            ),
+                                            Container(
+                                              alignment:
+                                                  FractionalOffset.topRight,
+                                              child: GestureDetector(
+                                                child: Icon(
+                                                  Icons.clear,
+                                                  size: 30,
+                                                ),
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("หมายเลขอุปกรณ์"),
+                                                Text("ละติจูด"),
+                                                Text("ลองติจูด"),
+                                                Text("ความเร็ว"),
+                                                Text("ทิศทาง"),
+                                                Text("เวลาที่ได้รับรายงาน"),
+                                                Text("เวลา จีพิเอส"),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text("หมายเลขอุปกรณ์"),
+                                                Text("ละติจูด"),
+                                                Text("ลองติจูด"),
+                                                Text("ความเร็ว"),
+                                                Text("ทิศทาง"),
+                                                Text("เวลาที่ได้รับรายงาน"),
+                                                Text("เวลา จีพิเอส"),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Container(
+                                          color: Colors.red[700],
+                                          height: 50,
+                                          width: 280,
+                                          child: Center(
+                                              child: Text("แสดงข้อมูลเพิ่มเติม",
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.white))),
+                                        )
+                                      ]),
+                                );
+                              },
                             ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      )),
+                          ))),
               JavascriptChannel(
-                  name: 'id',
+                  name: 'shipdata',
                   onMessageReceived: (message) {
-                    print("Message Form Web: ${message.message}");
+                    print(message.message);
                   }),
             },
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              margin: EdgeInsets.only(top: 50),
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                color: Colors.white,
-              ),
-              // color: Colors.green,
-              width: 250,
-              height: 50,
-              child: DropdownButton(
-                  underline: SizedBox(),
-                  isExpanded: true,
-                  value: crkml,
-                  items: kmlList.map((String value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      crkml = newValue!;
-                      kmlIndex = kmlList.indexOf(newValue);
-                    });
-                    controller?.loadUrl('$baseurl/$token/$kmlIndex');
-                  }),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    width: 50,
+                    margin: EdgeInsets.only(top: 40),
+                    child: IconButton(
+                        icon: const Icon(
+                          Icons.menu,
+                          size: 45,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => null)),
+                Container(
+                  margin: EdgeInsets.only(top: 50),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                    color: Colors.white,
+                  ),
+                  // color: Colors.green,
+                  width: 250,
+                  height: 50,
+                  child: DropdownButton(
+                      underline: SizedBox(),
+                      isExpanded: true,
+                      value: crkml,
+                      items: kmlList.map((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          crkml = newValue!;
+                          kmlIndex = kmlList.indexOf(newValue);
+                        });
+                        controller?.loadUrl('$baseurl/$kmlIndex');
+                      }),
+                ),
+                SizedBox(
+                  width: 30,
+                )
+              ],
             ),
           ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              alignment: Alignment.centerRight,
+              color: Colors.white,
+              width: double.infinity,
+              height: 75,
+            ),
+          )
         ],
       ),
-    ),
-    floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.arrow_upward),
-        onPressed: () {
-          controller?.runJavascript('fromFlutter("From Flutter")');
-        },
-      ),
     );
-    
   }
 }
