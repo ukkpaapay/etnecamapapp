@@ -3,21 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewScreen extends StatefulWidget {
+import 'Detail.dart';
+
+class MapScreen extends StatefulWidget {
   @override
-  State<WebViewScreen> createState() => _WebViewScreenState();
+  State<MapScreen> createState() => _MapScreenState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
-  List color = [
-    Color.fromRGBO(71, 79, 88, 1.0),
-    Color.fromRGBO(221, 106, 100, 1.0),
-    Color.fromRGBO(222, 153, 134, 1.0),
-    Color.fromRGBO(255, 191, 174, 1.0),
-    Color.fromRGBO(218, 218, 218, 1.0),
-    Color.fromRGBO(77, 164, 138, 1.0),
-    Color.fromRGBO(243, 201, 71, 1.0)
-  ];
+class _MapScreenState extends State<MapScreen> {
   WebViewController? controller;
   List<String> kmlList = [
     'ไม่มี',
@@ -39,7 +32,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       body: Stack(
         children: [
           WebView(
-            initialUrl: '$baseurl/$kmlIndex/',
+            initialUrl: '$baseurl/all/$kmlIndex/',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               controller = webViewController;
@@ -122,17 +115,27 @@ class _WebViewScreenState extends State<WebViewScreen> {
                                             )
                                           ],
                                         ),
-                                        Container(
-                                          color: Colors.red[700],
-                                          height: 50,
-                                          width: 280,
-                                          child: Center(
-                                              child: Text("แสดงข้อมูลเพิ่มเติม",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.white))),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DetailScreen()));
+                                          },
+                                          child: Container(
+                                            color: Colors.red[700],
+                                            height: 50,
+                                            width: double.infinity,
+                                            child: Center(
+                                                child: Text(
+                                                    "แสดงข้อมูลเพิ่มเติม",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white))),
+                                          ),
                                         )
                                       ]),
                                 );
@@ -186,7 +189,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                           crkml = newValue!;
                           kmlIndex = kmlList.indexOf(newValue);
                         });
-                        controller?.loadUrl('$baseurl/$kmlIndex');
+                        controller?.loadUrl('$baseurl/all/$kmlIndex');
                       }),
                 ),
                 SizedBox(

@@ -2,12 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webviwemap/flutterMap.dart';
-import 'package:webviwemap/readcsv.dart';
-import 'package:webviwemap/syncfusionMap.dart';
-import 'package:webviwemap/webview.dart';
-
-import 'webviewcommu.dart';
+import 'package:webviwemap/demoscreen/Map.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WebViewScreen(),
+      home: MapScreen(),
     );
   }
 }
